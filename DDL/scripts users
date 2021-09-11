@@ -1,0 +1,128 @@
+
+
+create or replace database STORE_PROFILE_DEV clone STORE_PROFILE
+create or replace database STORE_PROFILE_UAT clone STORE_PROFILE
+create or replace database STORE_PROFILE_PRD clone STORE_PROFILE
+
+create or replace user api_user_dev1 password='dev1';
+create or replace user api_user_uat1 password='uat1';
+create or replace user api_user_prd1 password='prd1';
+
+create or replace role api_dev;
+create or replace role api_uat;
+create or replace role api_prd;
+
+grant role api_dev to user api_user_dev1;
+grant role api_uat to user api_user_uat1;
+grant role api_prd to user api_user_prd1;
+
+GRANT all ON DATABASE STORE_PROFILE TO ROLE api_dev;
+
+GRANT all ON DATABASE STORE_PROFILE_DEV TO ROLE api_dev;
+GRANT all ON DATABASE STORE_PROFILE_UAT TO ROLE api_uat;
+GRANT all ON DATABASE STORE_PROFILE_PRD TO ROLE api_prd;
+
+grant ALL on warehouse MULE_CLOUDHUB to role api_dev;
+grant ALL on warehouse MULE_CLOUDHUB to role api_uat;
+grant ALL on warehouse MULE_CLOUDHUB to role api_uat;
+
+
+
+alter user api_user_dev1 set DEFAULT_WAREHOUSE = MULE_CLOUDHUB;
+alter user api_user_uat1 set DEFAULT_WAREHOUSE = MULE_CLOUDHUB;
+alter user api_user_prd1 set DEFAULT_WAREHOUSE = MULE_CLOUDHUB;
+
+alter user api_user_dev1 set DEFAULT_NAMESPACE = STORE_PROFILE_DEV.STAGE;
+alter user api_user_uat1 set DEFAULT_NAMESPACE = STORE_PROFILE_UAT.STAGE;
+alter user api_user_prd1 set DEFAULT_NAMESPACE = STORE_PROFILE_PRD.STAGE;
+
+alter user api_user_dev1 set DEFAULT_ROLE = api_dev;
+alter user api_user_uat1 set DEFAULT_ROLE = api_uat;
+alter user api_user_prd1 set DEFAULT_ROLE = api_prd;
+
+show roles;
+drop role api;
+
+show procedures;
+
+grant select on all tables in SCHEMA STORE_PROFILE.stage TO ROLE api_dev;
+grant select on all tables in SCHEMA STORE_PROFILE.landing TO ROLE api_dev;
+grant select on all tables in SCHEMA STORE_PROFILE.target TO ROLE api_dev;
+
+
+
+grant select on all tables in SCHEMA STORE_PROFILE_DEV.stage TO ROLE api_dev;
+grant select on all tables in SCHEMA STORE_PROFILE_DEV.landing TO ROLE api_dev;
+grant select on all tables in SCHEMA STORE_PROFILE_DEV.target TO ROLE api_dev;
+
+
+grant select on all tables in SCHEMA STORE_PROFILE_UAT.stage TO ROLE api_uat;
+grant select on all tables in SCHEMA STORE_PROFILE_UAT.landing TO ROLE api_uat;
+grant select on all tables in SCHEMA STORE_PROFILE_UAT.target TO ROLE api_uat;
+
+
+grant select on all tables in SCHEMA STORE_PROFILE_PRD.stage TO ROLE api_prd;
+grant select on all tables in SCHEMA STORE_PROFILE_PRD.landing TO ROLE api_prd;
+grant select on all tables in SCHEMA STORE_PROFILE_PRD.target TO ROLE api_prd;
+
+DROP ROLE api_dev;
+DROP ROLE api_uat;
+DROP ROLE api_prd;
+
+DROP user api_user_dev1;
+DROP user api_user_uat1;
+DROP user api_user_prd1;
+
+show users;
+show roles;
+
+drop database store_profile_dev;
+drop database store_profile_uat;
+drop database store_profile_prd;
+
+
+show grants to role bi_prd;
+
+grant usage on procedure sp_get_storeprofile_counts(varchar) to role api_dev;
+grant usage on procedure sp_get_storeprofile_counts_v1(varchar) to role api_dev;
+grant usage on procedure sp_storeprofile_details(varchar) to role api_dev;
+grant usage on procedure sp_storeprofile_details_v1(varchar) to role api_dev;
+
+grant usage on procedure sp_get_storeprofile_counts(varchar) to role api_uat;
+grant usage on procedure sp_get_storeprofile_counts_v1(varchar) to role api_uat;
+grant usage on procedure sp_storeprofile_details(varchar) to role api_uat;
+grant usage on procedure sp_storeprofile_details_v1(varchar) to role api_uat;
+
+grant usage on procedure sp_get_storeprofile_counts(varchar) to role api_prd;
+grant usage on procedure sp_get_storeprofile_counts_v1(varchar) to role api_prd;
+grant usage on procedure sp_storeprofile_details(varchar) to role api_prd;
+grant usage on procedure sp_storeprofile_details_v1(varchar) to role api_prd;
+
+
+show procedures;
+
+SHOW GRANTS TO ROLE bi_uat;
+SHOW GRANTS TO ROLE public;
+
+grant select on future tables in schema STORE_PROFILE_PRD.TARGET to ROLE bi_prd;
+grant select on future tables in schema STORE_PROFILE_DEV.TARGET to ROLE bi_dev;
+grant select on future tables in schema STORE_PROFILE_UAT.TARGET to ROLE bi_uat;
+
+alter user bi_user_dev1 set DEFAULT_WAREHOUSE = MULE_CLOUDHUB;
+alter user bi_user_uat1 set DEFAULT_WAREHOUSE = MULE_CLOUDHUB;
+alter user bi_user_prd1 set DEFAULT_WAREHOUSE = MULE_CLOUDHUB;
+
+alter user bi_user_dev1 set DEFAULT_NAMESPACE = STORE_PROFILE_DEV.TARGET;
+alter user bi_user_uat1 set DEFAULT_NAMESPACE = STORE_PROFILE_UAT.TARGET;
+alter user bi_user_prd1 set DEFAULT_NAMESPACE = STORE_PROFILE_PRD.TARGET;
+
+alter user bi_user_dev1 set DEFAULT_ROLE = bi_dev;
+alter user bi_user_uat1 set DEFAULT_ROLE = bi_uat;
+alter user bi_user_prd1 set DEFAULT_ROLE = bi_prd;
+
+
+
+
+
+
+
